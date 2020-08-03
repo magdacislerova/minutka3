@@ -9,16 +9,16 @@ const alarmElm = document.querySelector('.alarm');
 const stopbuttonElm = document.getElementById('stopbutton');
 
 const twoDigits = (num) => {
+  if (num < 10) {
   return num.toString().padStart(2, '0');
+  } else 
+  return num;
 }
 
 const countdown = () => {
   let timeMins = Number(inputElm.value);
   let timeSecs = timeMins*60;
-  if (timeMins < 10) {
-    timeMins = twoDigits(timeMins);
-  };    
-  minutesElm.innerHTML = timeMins; /* tady je to kvůli zobrazení počátečního čísla odpočtu */
+  minutesElm.innerHTML = twoDigits(timeMins); /* tady je to kvůli zobrazení počátečního čísla odpočtu */
   
   const timerId = setInterval(() => {
     if (timeSecs > 0) {
@@ -27,7 +27,7 @@ const countdown = () => {
         minutesElm.innerHTML = twoDigits(timeMins); /*tady se to aktualizuje*/
       };
       timeSecs -= 1;
-      secondsElm.innerHTML = twoDigits(timeSecs%60); /* tady aby to zobrazovalo odečítání; je trochu nelogické, že to twoDigits volám bez podmínky, aby to bylo menší než 10, ale je to zjevně chytré a když už to dvě místa má, tak to to první na 0 nepřepíše, takže to funguje */
+      secondsElm.innerHTML = twoDigits(timeSecs%60); /* tady aby to zobrazovalo odečítání */
     } else {
       alarmElm.classList.add('alarm--ring');
       audioElm.play();
@@ -35,15 +35,14 @@ const countdown = () => {
     }
     console.log(timeSecs);
   }, 1000);
-  inputElm.value = '';
+  inputElm.value = ''; /* vynulování input políčka */
 
   const stopCountdown = () => {
     clearTimeout(timerId);
     minutesElm.innerHTML = '00';
-    secondsElm.innerHTML = '00';
+    secondsElm.innerHTML = '00'; /* vynulování odpočtu a zrušení časovače */
   }
 
-  console.log(timeSecs);
   stopbuttonElm.addEventListener('click', stopCountdown);
 };
 
